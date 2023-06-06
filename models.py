@@ -18,11 +18,12 @@ class User(db.Model):
 
 
 class Meal(db.Model):
-    """Recepie for users"""
+    """Recipe for users"""
+    __tablename__= 'meals'
 
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)
     meal = db.Column(db.Text, nullable=False)
-    category_id = db.Column(db.Integer, ForeignKey="categories.id")
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
     category = db.relationship("Category", backref="meals")
     ingredients = db.relationship("Ingredient", secondary="meals_ingredients")
@@ -33,7 +34,7 @@ class User_Meal(db.Model):
     __tablename__ = "users_meals"
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
-    recepie.id = db.Column(db.Integer, db.ForeignKey('recepies.id'), primary_key = True)
+    meal_id = db.Column(db.Integer, db.ForeignKey('meals.id'), primary_key = True)
 
 
 class Category(db.Model):
@@ -58,9 +59,9 @@ class Meal_Ingredient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     meal_id = db.Column(db.Integer, db.ForeignKey("meals.id"), primary_key=True)
-    ingredient_id=db.Column(db.Integer, db.Foreign_key("ingredients.id"), primary_key=True)
+    ingredient_id=db.Column(db.Integer, db.ForeignKey("ingredients.id"), primary_key=True)
 
 
-def connect_db():
+def connect_db(app):
     db.app = app
     db.init_app(app)
