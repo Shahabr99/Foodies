@@ -2,7 +2,7 @@
 
 ## All Recepies in your hands
 
-This app allows a user to signup and search for any dish that they want to cook. They cna find the ingredients and instructions for cooking that meal.
+This app allows a user to signup and search for any dish that they want to cook. They can find the ingredients and instructions for cooking that meal.
 
 ## Technologies used:
 
@@ -10,7 +10,7 @@ This app allows a user to signup and search for any dish that they want to cook.
 - CSS
 - JavaScript
 - Python
-- Flask(Jinja, WTForms, SQLAlchemy)
+- Flask(Jinja, WTForms, SQLAlchemy, Bcrypt)
 - Bootstrap
 - jQuery
 
