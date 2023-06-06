@@ -12,6 +12,6 @@ This app allows a user to signup and search for any dish that they want to cook.
 - Python
 - Flask(Jinja, WTForms, SQLAlchemy)
 - Bootstrap
-- JQuery
+- jQuery
 
 API Link: [Spoonacular](https://spoonacular.com/food-api/docs)
