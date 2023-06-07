@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<h1 class="display-1 text-center">Please Login to continue</h1>
+{% for category, message in get_flashed_messages() %}
+<div class="bg-{{category}}"><p>{{message}}</p></div>
+{% endfor %}
+<form method="POST">
+  {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
+  'hidden' %}
+  <div>{{field.label(class_="fs-3")}}{{field(class="form-control")}}</div>
+  {% endfor %}
+</form>
+{% endblock %}

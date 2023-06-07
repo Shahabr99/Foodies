@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash
 from models import db, connect_db, User, Meal, Category, Ingredient 
-from forms import Signup
+from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 
 CURR_USER_KEY = "curr_user"
@@ -59,6 +59,26 @@ def signup_form():
             flash('Username already taken', 'warning')
             return redirect('/signup')
         login(user)
-        return redirect('/user')
+        return redirect(f'/user/{user.id}')
     else:
         return render_template('signup.html', form=form)
+
+
+@app.route('/signin', methods=["GET", "POST"])
+def signin():
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
+        
+    form = Signin()
+
+    return render_template('signin.html', form=form)
+
+
+
+@app.route('/user/<int:id>')
+def user_page(id):
+    if CURR_USER_KEY not in session:
+        return redirect('/signup')
+
+    user = User.query.get_or_404(id)
+
