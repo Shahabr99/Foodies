@@ -9,7 +9,7 @@ class Signup(FlaskForm):
     password = PasswordField('Password:', validators=[InputRequired()])
 
 
-class signin(FlaskForm):
+class Signin(FlaskForm):
     """User can login"""
     username = StringField("Username:", validators=[InputRequired()])
-    password = StringField("Password:", validators=[InputRequired()])
+    password = PasswordField("Password:", validators=[InputRequired()])

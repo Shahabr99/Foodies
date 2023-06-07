@@ -18,12 +18,24 @@ class User(db.Model):
     @classmethod
     def registration(cls, name, username, password):
         """hashing the passwords and adding to users table"""
-        user = User.query.filter_by(username=username).first()
 
         hashed_pass = bcrypt.generate_password_hash(password).decode('UTF-8')
-        user = User(name=name, username=username, password=password)
+        user = User(name=name, username=username, password=hashed_pass)
         db.session.add(user)
+        
         return user
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Checking to see if the entered password matches with the hashed one in database"""
+        user = User.query.filter_by(username=username).first()
+
+        if user:
+            valid = bcrypt.check_password_hash(user.password, password)
+            if valid:
+                return user
+        
+        return False
 
 
 

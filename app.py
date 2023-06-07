@@ -13,6 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 with app.app_context():
     connect_db(app)
+    db.drop_all()
     db.create_all()
 
 
@@ -66,10 +67,19 @@ def signup_form():
 
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
-    if CURR_USER_KEY in session:
-        del session[CURR_USER_KEY]
-        
+    """User logs in and server checks the password"""
+
     form = Signin()
+    if form.validate_on_submit():
+        user = User.authenticate(username=form.username.data, password=form.password.data)
+        if user:
+            login(user)
+            flash(f"Hello {user.username}", "success")
+            return redirect(f'/user/{user.id}')
+        
+        flash("Invalid username/password", "danger")
+        return redirect('/')
+
 
     return render_template('signin.html', form=form)
 
@@ -81,4 +91,5 @@ def user_page(id):
         return redirect('/signup')
 
     user = User.query.get_or_404(id)
+    return render_template('user.html', user=user)
 
