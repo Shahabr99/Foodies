@@ -10,7 +10,7 @@ This app allows a user to signup and search for any dish that they want to cook.
 - CSS
 - JavaScript
 - Python
-- Flask(Jinja, WTForms, SQLAlchemy, Bcrypt)
+- Flask(Jinja, WTForms, SQLAlchemy)
 - Bootstrap
 - jQuery
 
