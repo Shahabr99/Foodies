@@ -15,6 +15,16 @@ class User(db.Model):
 
     meals = db.relationship("Meal", secondary="users_meals")
 
+    @classmethod
+    def registration(cls, name, username, password):
+        """hashing the passwords and adding to users table"""
+        user = User.query.filter_by(username=username).first()
+
+        hashed_pass = bcrypt.generate_password_hash(password).decode('UTF-8')
+        user = User(name=name, username=username, password=password)
+        db.session.add(user)
+        return user
+
 
 
 class Meal(db.Model):
@@ -27,6 +37,8 @@ class Meal(db.Model):
 
     category = db.relationship("Category", backref="meals")
     ingredients = db.relationship("Ingredient", secondary="meals_ingredients")
+
+    
 
 
 class User_Meal(db.Model):
@@ -41,7 +53,7 @@ class Category(db.Model):
 
     __tablename__ = "categories"
 
-    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     category = db.Column(db.String(20), nullable= False)
 
 
