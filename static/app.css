@@ -88,10 +88,12 @@ ul li a:active {
 
 .hero-desc p {
   font-size: 1.6rem;
+  font-weight: 500;
 }
 
 .hero-desc .btn {
   font-size: 1.6rem;
+  font-weight: 500;
   text-transform: uppercase;
 }
 
