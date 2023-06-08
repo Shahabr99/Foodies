@@ -13,7 +13,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 with app.app_context():
     connect_db(app)
-    db.drop_all()
     db.create_all()
 
 
@@ -74,11 +73,11 @@ def signin():
         user = User.authenticate(username=form.username.data, password=form.password.data)
         if user:
             login(user)
-            flash(f"Hello {user.username}", "success")
+            flash(f"Hello {user.username}", "light")
             return redirect(f'/user/{user.id}')
-        
-        flash("Invalid username/password", "danger")
-        return redirect('/')
+        else:
+            flash("Please signup first", "danger")
+            return redirect('/signin')
 
 
     return render_template('signin.html', form=form)
