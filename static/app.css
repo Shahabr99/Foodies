@@ -308,3 +308,7 @@ ul li a:active {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.summary {
+  padding: 1.2rem;
+}

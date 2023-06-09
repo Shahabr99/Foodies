@@ -22,16 +22,14 @@
     class="recipe-image"
     style="background-image: url({{recipe['image']}})"
   ></div>
-  <div>
-    <h3>{{recipe['title']}}</h3>
-    <h4>Summary:</h4>
-    <p class="fs-5">{{recipe['summary'] | safe}}</p>
+  <div class="summary">
+    <h2>{{recipe['title']}}</h2>
+    <h3>Summary:</h3>
+    <p class="fs-4">{{recipe['summary'] | safe}}</p>
   </div>
-  <div>
-    <h3>Instructions:</h3>
-    {% for step in recipe["analyzedInstructions"]["steps"] %}
-    <p>step</p>
-    {% endfor %}
+  <div class="instructions">
+    <h2>Instructions:</h2>
+    <p class="fs-4">{{recipe["instructions"] | safe}}</p>
   </div>
 </main>
 {% endblock %}
