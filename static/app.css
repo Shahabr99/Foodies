@@ -277,10 +277,9 @@ ul li a:active {
 .meal-section {
   border: 1px solid;
   margin: 1.2rem;
-  overflow: hidden;
-  width: 95%;
-  height: 95%;
-  margin: 0.5rem auto;
+  padding: 1.2rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 1.2rem;
+  height: 90%;
+  max-width: 100rem;
 }

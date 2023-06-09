@@ -1,7 +1,9 @@
-from flask import Flask, render_template, redirect, session,  g, abort, flash
+from flask import Flask, render_template, redirect, session,  g, abort, flash, request
+import requests
 from models import db, connect_db, User, Meal, Category, Ingredient 
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
+from secret import API_KEY
 
 CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
@@ -14,6 +16,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 with app.app_context():
     connect_db(app)
     db.create_all()
+
+# TODO
+def get_recipes(meal):
+    """Getting all the related recipes from the endpoint"""
+    res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
+    data = res.json()
+    return data
+
 
 
 @app.before_request
@@ -92,3 +102,12 @@ def user_page(id):
     user = User.query.get_or_404(id)
     return render_template('user.html', user=user)
 
+
+@app.route('/user/<int:id>', methods=["POST"])
+def get_data(id):
+    """Getting meal data from API"""
+    user = User.query.get_or_404(id)
+    meal = request.form.get('searchbar')
+    meals = get_recipes(meal)
+    print(meals)
+    return render_template('meals.html', meals=meals)
