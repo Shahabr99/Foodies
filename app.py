@@ -17,13 +17,18 @@ with app.app_context():
     connect_db(app)
     db.create_all()
 
-# TODO
+
 def get_recipes(meal):
     """Getting all the related recipes from the endpoint"""
     res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
     data = res.json()
     return data
 
+def get_recipe_info(id):
+    """Gets ingredients, instructions and more"""
+    res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={API_KEY}")
+    data = res.json()
+    return data
 
 
 @app.before_request
@@ -109,5 +114,12 @@ def get_data(id):
     user = User.query.get_or_404(id)
     meal = request.form.get('searchbar')
     meals = get_recipes(meal)
-    print(meals)
+    
     return render_template('meals.html', meals=meals)
+
+
+@app.route('/recipe/<int:id>')
+def get_recipe(id):
+    recipe = get_recipe_info(id)
+    
+    return render_template('recipe.html', recipe=recipe)

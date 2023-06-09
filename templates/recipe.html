@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %}
+
+<nav class="navbar">
+  <ul>
+    <li>
+      <a href=""
+        ><img
+          class="logo"
+          src="/static/images/Foodies-logos_transparent.png"
+          alt="Foodies Logo"
+      /></a>
+    </li>
+  </ul>
+  <ul class="navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/signup">Edit profile</a></li>
+    <li><a href="/signin">Collection</a></li>
+  </ul>
+</nav>
+<main class="main">
+  <div
+    class="recipe-image"
+    style="background-image: url({{recipe['image']}})"
+  ></div>
+  <div>
+    <h3>{{recipe['title']}}</h3>
+    <h4>Summary:</h4>
+    <p class="fs-5">{{recipe['summary'] | safe}}</p>
+  </div>
+  <div>
+    <h3>Instructions:</h3>
+    {% for step in recipe["analyzedInstructions"]["steps"] %}
+    <p>step</p>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

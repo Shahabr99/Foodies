@@ -1,15 +1,12 @@
 {% extends 'user.html' %} {% block content %}
 <div class="meal-section">
   {% for meal in meals['results'] %}
-  <div
-    class="card"
-    style="width: 24rem; height: 22rem; box-shadow: 1px 2px 2px #00000065"
-  >
+  <div class="card meal-card" style="display: inline-block">
     <img src="{{ meal['image'] }}" class="card-img-top" alt="" />
     <div class="card-body">
-      <h5 class="card-title">{{ meal['title'] }}</h5>
+      <p class="card-title fs-5">{{ meal['title'] }}</p>
 
-      <a href="#" class="btn btn-primary mt-2">Select</a>
+      <a href="/recipe/{{ meal['id'] }}" class="btn btn-primary mt-2">Select</a>
     </div>
   </div>
   {% endfor %}

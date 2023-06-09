@@ -3,6 +3,7 @@
 */
 html {
   font-size: 62.5%;
+  height: 100vh;
 }
 
 * {
@@ -222,15 +223,10 @@ ul li a:active {
   border-radius: 1.4rem;
   box-shadow: 1px 1px 1px #00000081;
   width: 95%;
-  height: 90rem;
+  height: 100rem;
   margin: 0rem auto;
   overflow: hidden;
   border: 1px solid;
-}
-
-.left-sect {
-  grid-template-columns: 1 / 2;
-  grid-template-rows: 1 / -1;
 }
 
 .form-box {
@@ -274,12 +270,41 @@ ul li a:active {
   height: 1.2rem;
 }
 
+.left-sec {
+  overflow: scroll;
+}
+
 .meal-section {
-  border: 1px solid;
   margin: 1.2rem;
   padding: 1.2rem;
-  display: flex;
   gap: 1.2rem;
   height: 90%;
   max-width: 100rem;
+}
+
+.meal-card {
+  width: 20.5rem;
+  height: 20.5rem;
+  box-shadow: 1px 2px 2px #00000065;
+  margin: 5px 10px;
+}
+
+/***** Recipe section *****/
+
+.main {
+  display: grid;
+  grid-template-columns: 2fr 4fr;
+  grid-template-rows: repeat(3, 1fr);
+  border: 1px solid;
+  width: 90%;
+  height: 95%;
+  margin: 1.2rem auto;
+}
+
+.recipe-image {
+  width: 50rem;
+  height: 30rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
