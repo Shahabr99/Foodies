@@ -188,7 +188,6 @@ ul li a:active {
   letter-spacing: 0.3rem;
 }
 
-
 .signup-btn:hover {
   background-color: rgb(167, 58, 18);
   text-transform: uppercase;
@@ -278,5 +277,10 @@ ul li a:active {
 .meal-section {
   border: 1px solid;
   margin: 1.2rem;
-  
+  overflow: hidden;
+  width: 95%;
+  height: 95%;
+  margin: 0.5rem auto;
+  display: flex;
+  gap: 0.5rem;
 }
