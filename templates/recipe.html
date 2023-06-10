@@ -20,16 +20,26 @@
 <main class="main">
   <div
     class="recipe-image"
-    style="background-image: url({{recipe['image']}})"
+    style="background-image: url({{recipe.image}})"
   ></div>
   <div class="summary">
     <h2>{{recipe['title']}}</h2>
     <h3>Summary:</h3>
     <p class="fs-4">{{recipe['summary'] | safe}}</p>
   </div>
+
+  <div class="ingredients p-3">
+    <h2>Ingredients:</h2>
+    <ul>
+      {% for ingredient in recipe.extendedIngredients %}
+      <li class="fs-5">{{ ingredient.original }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
   <div class="instructions">
     <h2>Instructions:</h2>
-    <p class="fs-4">{{recipe["instructions"] | safe}}</p>
+    <div class="fs-4">{{recipe["instructions"] | safe}}</div>
   </div>
 </main>
 {% endblock %}

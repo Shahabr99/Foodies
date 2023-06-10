@@ -294,7 +294,7 @@ ul li a:active {
 .main {
   display: grid;
   grid-template-columns: 2fr 4fr;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   border: 1px solid;
   width: 90%;
   height: 95%;
@@ -311,4 +311,17 @@ ul li a:active {
 
 .summary {
   padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.instructions {
+  grid-column: 2 / -1;
+  grid-row: 2;
+  padding: 1.2rem;
+}
+
+.instr {
+  font-size: 1.5rem;
 }
