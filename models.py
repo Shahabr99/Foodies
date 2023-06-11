@@ -43,15 +43,17 @@ class Recipe(db.Model):
     """Recipe for users"""
     __tablename__= 'recipes'
 
-    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id=db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text, nullable=False)
     image=db.Column(db.Text, nullable=True)
     summary=db.Column(db.Text, nullable=True)
     instructions = db.Column(db.Text, nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    ingredients = db.Column(db.Text, nullable=True)
+    # category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
-    category = db.relationship("Category", backref="recipes")
-    ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
+
+    # category = db.relationship("Category", backref="recipes")
+    # ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
 
     
 

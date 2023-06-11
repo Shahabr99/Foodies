@@ -43,8 +43,8 @@
   <div class="ingredients">
     <h2>Ingredients:</h2>
     <ul>
-      {% for ingredient in recipe.extendedIngredients %}
-      <li class="fs-5">{{ ingredient.original }}</li>
+      {% for ingredient in recipe.ingredients %}
+      <li class="fs-5">{{ ingredient }}</li>
       {% endfor %}
     </ul>
   </div>
