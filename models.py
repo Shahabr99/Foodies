@@ -13,7 +13,7 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.Text, nullable=False)
 
-    meals = db.relationship("Meal", secondary="users_meals")
+    recipes = db.relationship("Recipe", secondary="users_recipes")
 
     @classmethod
     def registration(cls, name, username, password):
@@ -39,26 +39,29 @@ class User(db.Model):
 
 
 
-class Meal(db.Model):
+class Recipe(db.Model):
     """Recipe for users"""
-    __tablename__= 'meals'
+    __tablename__= 'recipes'
 
     id=db.Column(db.Integer, primary_key=True, autoincrement=True)
-    meal = db.Column(db.Text, nullable=False)
+    title = db.Column(db.Text, nullable=False)
+    image=db.Column(db.Text, nullable=True)
+    summary=db.Column(db.Text, nullable=True)
+    instructions = db.Column(db.Text, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
-    category = db.relationship("Category", backref="meals")
-    ingredients = db.relationship("Ingredient", secondary="meals_ingredients")
+    category = db.relationship("Category", backref="recipes")
+    ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
 
     
 
 
-class User_Meal(db.Model):
+class User_Recipe(db.Model):
 
-    __tablename__ = "users_meals"
+    __tablename__ = "users_recipes"
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
-    meal_id = db.Column(db.Integer, db.ForeignKey('meals.id'), primary_key = True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key = True)
 
 
 class Category(db.Model):
@@ -77,12 +80,12 @@ class Ingredient(db.Model):
     name = db.Column(db.String(20), nullable= False)
     
 
-class Meal_Ingredient(db.Model):
+class Recipe_Ingredient(db.Model):
 
-    __tablename__ = "meals_ingredients"
+    __tablename__ = "recipes_ingredients"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    meal_id = db.Column(db.Integer, db.ForeignKey("meals.id"), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"), primary_key=True)
     ingredient_id=db.Column(db.Integer, db.ForeignKey("ingredients.id"), primary_key=True)
 
 

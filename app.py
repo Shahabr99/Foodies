@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
-from models import db, connect_db, User, Meal, Category, Ingredient 
+from models import db, connect_db, User, Recipe, Category, Ingredient 
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 from secret import API_KEY
@@ -120,6 +120,41 @@ def get_data(id):
 
 @app.route('/recipe/<int:id>')
 def get_recipe(id):
-    recipe = get_recipe_info(id)
+    if not g.user:
+        flash("Unauthorized access", "danger")
+        return redirect('/')
+
+    recipe = Recipe.query.get(id)
+    ingredient= recipe.ingredients
+
+    if recipe:
+        return render_template('recipe.html', recipe=recipe)
+
+    else:
+        recipe = get_recipe_info(id)
     
-    return render_template('recipe.html', recipe=recipe)
+        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
+        db.session.add(new_recipe)
+        db.session.commit()
+
+        for ingredient in recipe['extendedIngredients']:
+            ingredient = Ingredient(name=ingredient['original'])
+            db.session.add(ingredient)
+            db.session.commit()
+
+        return render_template('recipe.html', recipe=recipe)
+
+
+@app.route('/recipe/<int:id>/collection')
+def add_recipe(id):
+    """User saving a recipe"""
+    if not g.user:
+        flash("Unauthorized access", "danger")
+        return redirect('/')
+        
+    
+    recipes = g.user.recipes
+    
+    return render_template('collection.html', recipes=recipes)
+    
+    

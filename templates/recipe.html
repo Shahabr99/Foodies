@@ -13,8 +13,9 @@
   </ul>
   <ul class="navigation">
     <li><a href="/">Home</a></li>
-    <li><a href="/signup">Shopping List</a></li>
-    <li><a href="/signin">Collection</a></li>
+    <li><a href="">Shopping List</a></li>
+    <li><a href="">Collection</a></li>
+    <li><a href="/signout">Sign out</a></li>
   </ul>
 </nav>
 <main class="main">
@@ -25,10 +26,12 @@
   <div class="summary">
     <h2>{{recipe['title']}}</h2>
     <div class="btn-box">
-      <a href="" class="btn btn-lg btn-primary text-light text-center"
+      <a
+        href="/recipe/{{recipe.id}}/collection"
+        class="btn btn-lg btn-primary text-light text-center"
         >Add to collections</a
       >
-      <a href="" class="btn btn-lg bg-success text-light text-center"
+      <a href="" class="btn btn-lg btn-success text-light text-center"
         >Create Shopping list</a
       >
     </div>
