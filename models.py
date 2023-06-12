@@ -49,10 +49,7 @@ class Recipe(db.Model):
     summary=db.Column(db.Text, nullable=True)
     instructions = db.Column(db.Text, nullable=True)
     # ingredients = db.Column(db.Text, nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
-
-    category = db.relationship("Category", backref="recipes")
     ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
 
     
@@ -63,15 +60,8 @@ class User_Recipe(db.Model):
     __tablename__ = "users_recipes"
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), primary_key = True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete="cascade"), primary_key = True)
 
-
-class Category(db.Model):
-
-    __tablename__ = "categories"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    category = db.Column(db.Text, nullable= False)
 
 
 class Ingredient(db.Model):
@@ -87,8 +77,8 @@ class Recipe_Ingredient(db.Model):
     __tablename__ = "recipes_ingredients"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id"), primary_key=True)
-    ingredient_id=db.Column(db.Integer, db.ForeignKey("ingredients.id"), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="cascade"), primary_key=True)
+    ingredient_id=db.Column(db.Integer, db.ForeignKey("ingredients.id", ondelete="cascade"), primary_key=True)
 
 
 def connect_db(app):

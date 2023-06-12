@@ -358,3 +358,14 @@ ul li a:active {
   grid-column: 1 / 2;
   grid-row: 1 / -1;
 }
+
+/****** 404 Page ******/
+
+.error-page {
+  max-width: 90%;
+  max-height: 90%;
+  box-shadow: 2px 2px 2px #000;
+  background-image: url("/static/images/Error-pana.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+}

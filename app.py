@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
-from models import db, connect_db, User, Recipe, Ingredient, Recipe_Ingredient
+from models import db, connect_db, User, Recipe, Ingredient, Recipe_Ingredient, User_Recipe
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 from secret import API_KEY
@@ -25,7 +25,7 @@ def get_recipes(meal):
     return data
 
 def get_recipe_info(id):
-    """Gets ingredients, instructions and more"""
+    """Gets ingredients, instructions and some information about the recipe"""
     res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={API_KEY}")
     data = res.json()
     return data
@@ -33,7 +33,7 @@ def get_recipe_info(id):
 
 @app.before_request
 def add_user_to_g():
-    """If user is logged in, add curr user to Flask global"""
+    """If user is logged in, add current user to Flask global"""
     if CURR_USER_KEY in session:
         g.user = User.query.get(session[CURR_USER_KEY])
     else: 
@@ -58,6 +58,7 @@ def home():
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup_form():
+    """User can fill a form and create an account"""
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
 
@@ -82,6 +83,8 @@ def signup_form():
 @app.route('/signin', methods=["GET", "POST"])
 def signin():
     """User logs in and server checks the password"""
+    if CURR_USER_KEY in session:
+        del session[CURR_USER_KEY]
 
     form = Signin()
     if form.validate_on_submit():
@@ -128,35 +131,31 @@ def get_recipe(id):
     ingredients = Recipe.ingredients
     
     if recipe:
-        
+        ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == recipe.id).all()
+
         return render_template('recipe.html', recipe=recipe, ingredients=ingredients)
 
-    # else:
-    #     recipe = get_recipe_info(id)
-    #     ingredients = [ingredient['original'] for ingredient in recipe['extendedIngredients']]
-        
-    #     new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'], ingredients= ingredients)
-    #     db.session.add(new_recipe)
-    #     db.session.commit()
-
-
-    #     return render_template('recipe.html', recipe=new_recipe)
     else:
         recipe = get_recipe_info(id)
+
+        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
+        db.session.add(new_recipe)
+        db.session.commit()
+        
+        user_recipe = User_Recipe(user_id=g.user.id, recipe_id=new_recipe.id)
+
+
         for name in recipe['extendedIngredients']:
             ingredient = Ingredient(name=name["original"])
             db.session.add(ingredient)
             db.session.commit()
-            
-        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
-        db.session.add(new_recipe)
-        db.session.commit()
-
-        recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
-        db.session.add(recipe_ingredient)
-        db.session.commit()
+            recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
+            db.session.add(recipe_ingredient)
+            db.session.commit()
         
-        return render_template('recipe.html', recipe=new_recipe, ingredients=Recipe.ingredients)
+        ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == new_recipe.id).all()
+            
+        return render_template('recipe.html', recipe=new_recipe, ingredients=ingredients)
 
 
 @app.route('/recipe/<int:id>/collection')
@@ -167,8 +166,12 @@ def add_recipe(id):
         return redirect('/')
         
     
-    recipes = g.user.recipes
+    recipes = User.query.join(User_Recipe).filter(User_Recipe.user_id == g.user.id)
     
     return render_template('collection.html', recipes=recipes)
     
     
+@app.errorhandler(404)
+def show_error_page():
+    """Loads the 404 page in case of 404 error"""
+    return render_template("404.html"), 404
