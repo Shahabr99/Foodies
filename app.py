@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
-from models import db, connect_db, User, Recipe
+from models import db, connect_db, User, Recipe, Ingredient, Recipe_Ingredient
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 from secret import API_KEY
@@ -125,11 +125,11 @@ def get_recipe(id):
         return redirect('/')
 
     recipe = Recipe.query.get(id)
-    
+    ingredients = Recipe.ingredients
     
     if recipe:
         
-        return render_template('recipe.html', recipe=recipe)
+        return render_template('recipe.html', recipe=recipe, ingredients=ingredients)
 
     # else:
     #     recipe = get_recipe_info(id)
@@ -143,14 +143,20 @@ def get_recipe(id):
     #     return render_template('recipe.html', recipe=new_recipe)
     else:
         recipe = get_recipe_info(id)
-        ingredients = [ingredient['original'] for ingredient in recipe['extendedIngredients']]
-        
-        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'], ingredients= ingredients)
+        for name in recipe['extendedIngredients']:
+            ingredient = Ingredient(name=name["original"])
+            db.session.add(ingredient)
+            db.session.commit()
+            
+        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
         db.session.add(new_recipe)
         db.session.commit()
 
-
-        return render_template('recipe.html', recipe=new_recipe)
+        recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
+        db.session.add(recipe_ingredient)
+        db.session.commit()
+        
+        return render_template('recipe.html', recipe=new_recipe, ingredients=Recipe.ingredients)
 
 
 @app.route('/recipe/<int:id>/collection')

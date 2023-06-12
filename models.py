@@ -48,12 +48,12 @@ class Recipe(db.Model):
     image=db.Column(db.Text, nullable=True)
     summary=db.Column(db.Text, nullable=True)
     instructions = db.Column(db.Text, nullable=True)
-    ingredients = db.Column(db.Text, nullable=True)
-    # category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    # ingredients = db.Column(db.Text, nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
 
 
-    # category = db.relationship("Category", backref="recipes")
-    # ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
+    category = db.relationship("Category", backref="recipes")
+    ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
 
     
 
@@ -71,7 +71,7 @@ class Category(db.Model):
     __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    category = db.Column(db.String(20), nullable= False)
+    category = db.Column(db.Text, nullable= False)
 
 
 class Ingredient(db.Model):
@@ -79,7 +79,7 @@ class Ingredient(db.Model):
     __tablename__ = "ingredients"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(20), nullable= False)
+    name = db.Column(db.Text, nullable= False)
     
 
 class Recipe_Ingredient(db.Model):
