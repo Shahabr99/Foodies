@@ -19,8 +19,8 @@
     </ul>
     {% endif %} {% if g.user %}
     <ul class="navigation">
-      <li><a href="/user/{{g.user.id}}">Profile</a></li>
-      <li><a href="/signup">Edit Profile</a></li>
+      <li><a href="/user/{{g.user.id}}">Find Recipe</a></li>
+
       <li><a href="/signout">Sign out</a></li>
     </ul>
     {% endif %}
@@ -36,7 +36,7 @@
         with just few steps. You can also save ingredients in your shopping
         list.
       </p>
-      <a href="/signup" class="btn">Start here</a>
+      <a href="/signup" class="btn start-btn">Start here</a>
     </div>
     <div class="hero-image"></div>
   </div>

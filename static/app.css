@@ -127,6 +127,11 @@ ul li a:active {
   transform: scale(1.4);
 }
 
+.start-btn {
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+}
+
 /****** Signup/in Section *****/
 
 .box {
@@ -222,10 +227,10 @@ ul li a:active {
   grid-template-rows: 1fr;
   border-radius: 1.4rem;
   box-shadow: 1px 1px 1px #00000081;
-  width: 95%;
-  height: 100rem;
+  max-width: 95%;
+  height: 90rem;
   margin: 0rem auto;
-  overflow: hidden;
+  overflow: scroll;
   border: 1px solid;
 }
 
@@ -236,10 +241,11 @@ ul li a:active {
   gap: 1.2rem;
 }
 
-.image-box {
+.left-sec {
   display: flex;
   flex-direction: column;
-  grid-template-rows: 1 / -1;
+  grid-column: 1 / 2;
+  grid-row: 1;
 }
 
 .upper-sect {
@@ -248,6 +254,8 @@ ul li a:active {
   background-position: center;
   background-repeat: no-repeat;
   height: 100%;
+  grid-column: 2 / -1;
+  grid-row: 1;
 }
 
 .lower-sect {
@@ -256,22 +264,25 @@ ul li a:active {
   background-position: center;
   background-repeat: no-repeat;
   height: 100%;
+  grid-column: 2 / -1;
+  grid-row: 2;
+}
+
+.input-container {
+  position: relative;
+  width: 45rem;
 }
 
 .search-btn {
-  width: 3.6rem;
-  height: 3.6rem;
-  border: none;
-  border-radius: 0.6rem;
+  position: absolute;
+  top: 50%;
+  right: -1.2rem;
+  transform: translate(-60%, -75%);
 }
 
 .bx {
   width: 2.4rem;
   height: 1.2rem;
-}
-
-.left-sec {
-  overflow: scroll;
 }
 
 .meal-section {
@@ -337,17 +348,17 @@ ul li a:active {
   font-size: 1.5rem;
 }
 
-/****** User's saved recipes ******/
+/****** User's saved recipes in collection ******/
 
 .saved-recipes {
-  display: grid;
-  grid-template-columns: 2fr 4fr;
-  grid-template-rows: 1fr 1fr;
+  grid-column: 2 / -1;
+  grid-row: 1 / -1;
   column-gap: 1.2rem;
-  max-width: 92%;
-  max-height: 95%;
+  min-width: 97%;
+  min-height: 97%;
   margin: 1.2rem auto;
-  box-shadow: 2px 2px 3px 3px #0000006e;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .stored-illustration {
@@ -356,16 +367,23 @@ ul li a:active {
   background-position: center;
   background-size: cover;
   grid-column: 1 / 2;
-  grid-row: 1 / -1;
+  grid-row: 1 / 2;
+}
+
+.recipe_card {
+  margin: 0.8rem;
+  display: inline-block;
 }
 
 /****** 404 Page ******/
 
 .error-page {
-  max-width: 90%;
-  max-height: 90%;
-  box-shadow: 2px 2px 2px #000;
+  width: 90rem;
+  height: 50rem;
+  margin: 3.6rem auto;
+
   background-image: url("/static/images/Error-pana.png");
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
 }

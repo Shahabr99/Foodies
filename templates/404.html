@@ -1,3 +1,15 @@
-{% extends 'base.html' %} {% block content %}
-<div class="error-page"></div>
-{% endblock %}
+{% extends 'base.html' %} {% block title %}Error-404{%endblock %} {% block
+content %}
+<div class="message-404">
+  <h4 class="display-4 text-center">
+    Sorry, that page doesn't exist! {{ request.status }}
+  </h4>
+  <p class="m-3 text-center">
+    You can go to home page by clicking
+    <a href="/"><b>return to the homepage</b></a
+    >.
+  </p>
+  <div class="error-page"></div>
+
+  {% endblock %}
+</div>

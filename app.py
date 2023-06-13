@@ -20,9 +20,12 @@ with app.app_context():
 
 def get_recipes(meal):
     """Getting all the related recipes from the endpoint"""
+    
     res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
     data = res.json()
     return data
+    
+
 
 def get_recipe_info(id):
     """Gets ingredients, instructions and some information about the recipe"""
@@ -117,9 +120,11 @@ def get_data(id):
     user = User.query.get_or_404(id)
     meal = request.form.get('searchbar')
     meals = get_recipes(meal)
-    
-    return render_template('meals.html', meals=meals)
-
+    if meals:
+        return render_template('meals.html', meals=meals)
+    else:
+        flash("Invalid data", "warning")
+        return redirect(f'/user/{user.id}')
 
 @app.route('/recipe/<int:id>')
 def get_recipe(id):
@@ -127,12 +132,9 @@ def get_recipe(id):
         flash("Unauthorized access", "danger")
         return redirect('/')
 
-    
     recipe = get_recipe_info(id)
     user = g.user
-    
-        
-            
+       
     return render_template('recipe.html', recipe=recipe, user=user)
 
 
@@ -151,16 +153,17 @@ def add_recipe(recipe_id, user_id):
         return redirect(f"/recipe/{id}")
     
 
-    
+    # adding the new recipe to data base
     new_recipe = Recipe(id=recipe_id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
     db.session.add(new_recipe)
     db.session.commit()
         
+    # Updating recipes of the current user
     user_recipe = User_Recipe(user_id=user_id, recipe_id=new_recipe.id)
     db.session.add(user_recipe)
     db.session.commit()
 
-
+    # Updating the ingredients of the current recipe
     for name in recipe['extendedIngredients']:
         ingredient = Ingredient(name=name["original"])
         db.session.add(ingredient)
@@ -185,6 +188,6 @@ def log_out():
     
     
 @app.errorhandler(404)
-def show_error_page():
+def show_error_page(e):
     """Loads the 404 page in case of 404 error"""
     return render_template("404.html"), 404

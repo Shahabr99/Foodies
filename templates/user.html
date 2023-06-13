@@ -37,33 +37,40 @@
       </ul>
       <ul class="navigation">
         <li><a href="/">Home</a></li>
-        <li><a href="/signup">Edit profile</a></li>
-        <li><a href="/signin">Collection</a></li>
+        <li><a href="/signup">Shopping List</a></li>
+        <li>
+          <a href="">Edit Profile</a>
+        </li>
         <li><a href="/signout">Sign out</a></li>
       </ul>
     </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div class="container-md col-md-4 bg-{{category}} p-3">
+      <p class="text-center text-light">{{messages}}</p>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
     <main class="main-container">
       <div class="left-sect">
         <div class="form-box">
-          <form class="search-form d-flex gap-1" action="" method="POST">
-            <input
-              class="form-control form-control-lg"
-              type="text"
-              name="searchbar"
-              id="searchbar"
-              placeholder="Type to search"
-            />
-            <button class="search-btn" type="submit">
-              <i class="bx bx-search bx-md"></i>
-            </button>
+          <form class="search-form d-flex gap-1 w-50" action="" method="POST">
+            <div class="input-container">
+              <input
+                class="form-control form-control-lg"
+                type="text"
+                name="searchbar"
+                id="searchbar"
+                placeholder="Type to search"
+              />
+
+              <i class="search-btn bx bx-search bx-md"></i>
+            </div>
           </form>
         </div>
         {% block content %}{% endblock %}
       </div>
-      <div class="image-box">
-        <div class="lower-sect"></div>
-        <div class="upper-sect"></div>
-      </div>
+
+      <div class="upper-sect"></div>
     </main>
   </body>
 </html>

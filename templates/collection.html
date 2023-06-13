@@ -1,16 +1,19 @@
 {% extends 'base.html' %} {% block content %}
 <h1 class="display-2 text-center">Saved Recipes</h1>
-<main class="saved-recipes p-4">
+<main class="main p-4">
   <div class="stored-illustration"></div>
-  {% for recipe in recipes %}
-  <div class="card" style="width: 20rem">
-    <img src="{{recipe.image}}" class="card-img-top" alt="..." />
-    <div class="card-body">
-      <h5 class="card-title">{{recipe.title}}</h5>
+  <div class="saved-recipes">
+    {% for recipe in recipes %}
+    <div class="card recipe_card" style="width: 20rem">
+      <img src="{{recipe.image}}" class="card-img-top" alt="..." />
+      <div class="card-body">
+        <h5 class="card-title">{{recipe.title}}</h5>
 
-      <a href="/recipe/{{recipe.id}}" class="btn btn-primary">Details</a>
+        <a href="/recipe/{{recipe.id}}" class="btn btn-primary">Details</a>
+        <a href="" class="btn btn-danger text-light">Delete</a>
+      </div>
     </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </main>
 {% endblock %}
