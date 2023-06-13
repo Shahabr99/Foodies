@@ -24,10 +24,10 @@
     style="background-image: url({{recipe.image}})"
   ></div>
   <div class="summary">
-    <h2>{{recipe['title']}}</h2>
+    <h2>{{recipe['title'] | upper }}</h2>
     <div class="btn-box">
       <a
-        href="/recipe/{{recipe.id}}/collection"
+        href="/recipe/{{recipe.id}}/collection/{{user.id}}"
         class="btn btn-lg btn-primary text-light text-center"
         >Add to collections</a
       >
@@ -43,8 +43,8 @@
   <div class="ingredients">
     <h2>Ingredients:</h2>
     <ul>
-      {% for ingredient in ingredients %}
-      <li class="fs-5">{{ ingredient.name }}</li>
+      {% for ingredient in recipe.extendedIngredients %}
+      <li class="fs-5">{{ ingredient.original }}</li>
       {% endfor %}
     </ul>
   </div>

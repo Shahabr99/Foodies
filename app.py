@@ -43,7 +43,7 @@ def login(user):
     """Log in user"""
     session[CURR_USER_KEY] = user.id
 
-def logout(user):
+def logout():
     """logout user"""
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
@@ -127,48 +127,61 @@ def get_recipe(id):
         flash("Unauthorized access", "danger")
         return redirect('/')
 
-    recipe = Recipe.query.get(id)
-    ingredients = Recipe.ingredients
     
-    if recipe:
-        ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == recipe.id).all()
-
-        return render_template('recipe.html', recipe=recipe, ingredients=ingredients)
-
-    else:
-        recipe = get_recipe_info(id)
-
-        new_recipe = Recipe(id=id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
-        db.session.add(new_recipe)
-        db.session.commit()
+    recipe = get_recipe_info(id)
+    user = g.user
+    
         
-        user_recipe = User_Recipe(user_id=g.user.id, recipe_id=new_recipe.id)
-
-
-        for name in recipe['extendedIngredients']:
-            ingredient = Ingredient(name=name["original"])
-            db.session.add(ingredient)
-            db.session.commit()
-            recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
-            db.session.add(recipe_ingredient)
-            db.session.commit()
-        
-        ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == new_recipe.id).all()
             
-        return render_template('recipe.html', recipe=new_recipe, ingredients=ingredients)
+    return render_template('recipe.html', recipe=recipe, user=user)
 
 
-@app.route('/recipe/<int:id>/collection')
-def add_recipe(id):
-    """User saving a recipe"""
+@app.route('/recipe/<int:recipe_id>/collection/<int:user_id>')
+def add_recipe(recipe_id, user_id):
+    """Adding the saved recipe to database"""
     if not g.user:
         flash("Unauthorized access", "danger")
         return redirect('/')
-        
     
-    recipes = User.query.join(User_Recipe).filter(User_Recipe.user_id == g.user.id)
+    recipe = get_recipe_info(recipe_id)
+    
+    
+    if recipe in g.user.recipes:
+        flash("Recipe already in collection", "info")
+        return redirect(f"/recipe/{id}")
+    
+
+    
+    new_recipe = Recipe(id=recipe_id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
+    db.session.add(new_recipe)
+    db.session.commit()
+        
+    user_recipe = User_Recipe(user_id=user_id, recipe_id=new_recipe.id)
+    db.session.add(user_recipe)
+    db.session.commit()
+
+
+    for name in recipe['extendedIngredients']:
+        ingredient = Ingredient(name=name["original"])
+        db.session.add(ingredient)
+        db.session.commit()
+        recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
+        db.session.add(recipe_ingredient)
+        db.session.commit()
+        
+    ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == new_recipe.id).all()
+    recipes = g.user.recipes
     
     return render_template('collection.html', recipes=recipes)
+
+
+@app.route('/signout')
+def log_out():
+    """Deleting user from session and log out"""
+    logout()
+    flash("You have logged out successfully", "info")
+    return redirect('/signin')
+
     
     
 @app.errorhandler(404)
