@@ -1,16 +1,44 @@
-{% extends 'base.html' %} {% block content %}
-<h1 class="display-2 text-center">Saved Recipes</h1>
-<main class="main p-4">
+{% extends 'base.html' %} {% block title %} {{g.user.username }}'s recipes {%
+endblock %} {% block content %}
+<nav class="navbar">
+  <ul>
+    <li>
+      <a href=""
+        ><img
+          class="logo"
+          src="/static/images/Foodies-logos_transparent.png"
+          alt="Foodies Logo"
+      /></a>
+    </li>
+  </ul>
+  <ul class="navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/user/{{g.user.id}}">Find Recipe</a></li>
+    <li><a href="/signup">Shopping List</a></li>
+    <li><a href="/signout">Sign out</a></li>
+  </ul>
+</nav>
+<h1 class="display-2 text-center text-uppercase">
+  {{g.user.username}}'s Saved Recipes
+</h1>
+<main class="main-saved p-4">
   <div class="stored-illustration"></div>
   <div class="saved-recipes">
     {% for recipe in recipes %}
-    <div class="card recipe_card" style="width: 20rem">
+    <div class="card recipe_card" style="width: 20rem; height: 22rem">
       <img src="{{recipe.image}}" class="card-img-top" alt="..." />
-      <div class="card-body">
+      <div class="card-container card-body">
         <h5 class="card-title">{{recipe.title}}</h5>
-
-        <a href="/recipe/{{recipe.id}}" class="btn btn-primary">Details</a>
-        <a href="" class="btn btn-danger text-light">Delete</a>
+        <div class="btnnist">
+          <a href="/recipe/{{recipe.id}}" class="btn btn-primary px-3"
+            >Details</a
+          >
+          <a
+            href="/recipe/{{recipe.id}}/delete"
+            class="btn btn-danger text-light px-3"
+            >Delete</a
+          >
+        </div>
       </div>
     </div>
     {% endfor %}

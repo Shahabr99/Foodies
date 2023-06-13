@@ -306,26 +306,42 @@ ul li a:active {
   display: grid;
   grid-template-columns: 2fr 4fr;
   grid-template-rows: repeat(2, 1fr);
+  row-gap: 1.2rem;
   border: 1px solid;
-  max-width: 92%;
-  max-height: 95%;
+  border-radius: 1.2rem;
+  width: 95%;
+  height: 90%;
   margin: 1.2rem auto;
+  overflow: hidden;
 }
 
 .recipe-image {
-  width: 50rem;
-  height: 30rem;
+  width: 100%;
+  height: 100%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  grid-column: 1 / 2;
+  grid-row: 1;
+  box-shadow: 2px 3px 3px #000;
+}
+
+.title {
+  letter-spacing: 1rem;
+  font-weight: 600;
 }
 
 .summary {
-  padding: 1.2rem;
+  padding: 2.4rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 1.2rem;
+  gap: 1.2rem;
+  grid-column: 2 / -1;
+  grid-row: 1;
+}
+
+.summary-text {
+  line-height: 3.2rem;
 }
 
 .btn-box {
@@ -334,14 +350,15 @@ ul li a:active {
 }
 
 .ingredients {
-  padding-left: 1.2rem;
-  padding-top: 0.6rem;
+  padding: 1.2rem;
+  grid-column: 1 / 2;
+  grid-row: 2;
 }
 
 .instructions {
   grid-column: 2 / -1;
   grid-row: 2;
-  padding: 1.2rem;
+  padding: 2.4rem;
 }
 
 .instr {
@@ -350,9 +367,20 @@ ul li a:active {
 
 /****** User's saved recipes in collection ******/
 
+.main-saved {
+  display: grid;
+  grid-template-columns: 2fr 4fr;
+  grid-template-rows: 1fr;
+  border: 1px solid;
+  border-radius: 1.2rem;
+  width: 95%;
+  height: 90%;
+  margin: 1.2rem auto;
+  overflow: hidden;
+}
+
 .saved-recipes {
   grid-column: 2 / -1;
-  grid-row: 1 / -1;
   column-gap: 1.2rem;
   min-width: 97%;
   min-height: 97%;
@@ -367,12 +395,24 @@ ul li a:active {
   background-position: center;
   background-size: cover;
   grid-column: 1 / 2;
-  grid-row: 1 / 2;
+  width: 45.5rem;
+  height: 45.5rem;
 }
 
 .recipe_card {
   margin: 0.8rem;
   display: inline-block;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.btnnist {
+  display: flex;
+  gap: 0.6rem;
 }
 
 /****** 404 Page ******/

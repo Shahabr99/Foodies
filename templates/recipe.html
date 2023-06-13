@@ -1,5 +1,4 @@
 {% extends 'base.html' %} {% block content %}
-
 <nav class="navbar">
   <ul>
     <li>
@@ -14,28 +13,28 @@
   <ul class="navigation">
     <li><a href="/">Home</a></li>
     <li><a href="">Shopping List</a></li>
-    <li><a href="/recipe/{{recipe.id}}/user/{{user.id}}">Collection</a></li>
+    <li><a href="/collection">Collection</a></li>
     <li><a href="/signout">Sign out</a></li>
   </ul>
 </nav>
 {% with messages = get_flashed_messages(with_categories=True) %} {% if messages
 %} {% for category, message in messages %}
 <div class="container-md col-md-4 bg-{{category}} p-3">
-  <p class="text-center text-light">{{message}}</p>
+  <p class="text-center text-light fs-2">{{message}}</p>
 </div>
 {% endfor %} {% endif %} {% endwith %}
 <main class="main">
   <div
     class="recipe-image"
-    style="background-image: url({{recipe.image}})"
+    style="background-image: url({{recipe.image}}); background-size: cover; background-repeat: no-repeat;"
   ></div>
   <div class="summary">
-    <h2>{{recipe['title'] | upper }}</h2>
+    <h2 class="title">{{recipe['title'] | upper }}</h2>
     <div class="btn-box">
       <a
-        href="/recipe/{{recipe.id}}/collection/{{user.id}}"
+        href="/recipe/{{recipe_id}}/collection"
         class="btn btn-lg btn-primary text-light text-center"
-        >Add to collections</a
+        >Add to collection</a
       >
       <a href="" class="btn btn-lg btn-success text-light text-center"
         >Create Shopping list</a
@@ -43,14 +42,14 @@
     </div>
 
     <h3>Summary:</h3>
-    <p class="fs-4">{{recipe['summary'] | safe}}</p>
+    <p class="summary-text fs-4">{{recipe['summary'] | safe}}</p>
   </div>
 
   <div class="ingredients">
     <h2>Ingredients:</h2>
     <ul>
       {% for ingredient in recipe.extendedIngredients %}
-      <li class="fs-5">{{ ingredient.original }}</li>
+      <li class="fs-4">{{ ingredient.original }}</li>
       {% endfor %}
     </ul>
   </div>

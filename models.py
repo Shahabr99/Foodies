@@ -59,7 +59,7 @@ class User_Recipe(db.Model):
 
     __tablename__ = "users_recipes"
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete="cascade"), primary_key = True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete="cascade"), primary_key = True)
 
 

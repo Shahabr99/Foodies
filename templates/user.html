@@ -38,16 +38,14 @@
       <ul class="navigation">
         <li><a href="/">Home</a></li>
         <li><a href="/signup">Shopping List</a></li>
-        <li>
-          <a href="">Edit Profile</a>
-        </li>
+        <li><a href="/collection">Collection</a></li>
         <li><a href="/signout">Sign out</a></li>
       </ul>
     </nav>
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %} {% for category, message in messages %}
     <div class="container-md col-md-4 bg-{{category}} p-3">
-      <p class="text-center text-light">{{messages}}</p>
+      <p class="text-center text-light fs-2">{{messages}}</p>
     </div>
     {% endfor %} {% endif %} {% endwith %}
     <main class="main-container">
