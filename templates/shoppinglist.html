@@ -28,7 +28,8 @@ content %}
         <ul>
           {% for ingredient in recipe.ingredients %}
           <li class="shopping-list fs-4">
-            <input type="checkbox" name="tobuy" /> {{ingredient.name}}
+            <input type="checkbox" name="tobuy" id="check" />
+            {{ingredient.name}}
           </li>
           {% endfor %}
         </ul>
