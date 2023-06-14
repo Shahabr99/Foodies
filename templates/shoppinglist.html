@@ -1,0 +1,41 @@
+{% extends 'base.html' %} {% block title %}Shopping List{% endblock %} {% block
+content %}
+<nav class="navbar">
+  <ul>
+    <li>
+      <a href=""
+        ><img
+          class="logo"
+          src="/static/images/Foodies-logos_transparent.png"
+          alt="Foodies Logo"
+      /></a>
+    </li>
+  </ul>
+  <ul class="navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/shoppinglist">Shopping List</a></li>
+    <li><a href="/collection">Collection</a></li>
+    <li><a href="/signout">Sign out</a></li>
+  </ul>
+</nav>
+<div>
+  <div></div>
+  <div class="list-container">
+    {% for recipe in recipes %}
+    <ul>
+      <div class="list-card">
+        <li class="recipe-name fs-2">{{recipe.title}}:</li>
+        <ul>
+          {% for ingredient in recipe.ingredients %}
+          <li class="shopping-list fs-4">
+            <input type="checkbox" name="tobuy" /> {{ingredient.name}}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </ul>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

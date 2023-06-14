@@ -192,6 +192,14 @@ def show_collection():
     return render_template('collection.html', recipes=recipes)
 
 
+@app.route('/shoppinglist')
+def show_list():
+    """Creates a list of items to but for a recipe"""
+    recipes = g.user.recipes;
+
+    return render_template('shoppinglist.html', recipes=recipes)
+
+
 
 @app.route('/recipe/<int:id>/delete')
 def delete_recipe(id):

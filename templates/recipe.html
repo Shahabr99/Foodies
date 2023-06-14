@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% block title %}{{recipe.title}}{% endblock %} {%
+block content %}
 <nav class="navbar">
   <ul>
     <li>
@@ -12,7 +13,7 @@
   </ul>
   <ul class="navigation">
     <li><a href="/">Home</a></li>
-    <li><a href="">Shopping List</a></li>
+    <li><a href="/shoppinglist">Shopping List</a></li>
     <li><a href="/collection">Collection</a></li>
     <li><a href="/signout">Sign out</a></li>
   </ul>
@@ -36,7 +37,9 @@
         class="btn btn-lg btn-primary text-light text-center"
         >Add to collection</a
       >
-      <a href="" class="btn btn-lg btn-success text-light text-center"
+      <a
+        href="/shoppinglist"
+        class="btn btn-lg btn-success text-light text-center"
         >Create Shopping list</a
       >
     </div>
