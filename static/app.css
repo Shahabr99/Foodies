@@ -500,3 +500,7 @@ ul li a:active {
 .shopping-list {
   list-style: none;
 }
+
+.clicked {
+  text-decoration: line-through;
+}
