@@ -176,43 +176,43 @@ def add_recipe(recipe_id):
         flash("Unauthorized access", "danger")
         return redirect('/')
     
-    try:
-        recipe = get_recipe_info(recipe_id)
     
-
-        # adding the new recipe to data base
-        if recipe not in g.user.recipes:
-            new_recipe = Recipe(id=recipe_id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
-            db.session.add(new_recipe)
-            db.session.commit()
-        
-
-            # Updating recipes of the current user
-            user_recipe = User_Recipe(user_id=g.user.id, recipe_id=new_recipe.id)
-            db.session.add(user_recipe)
-            db.session.commit()
+    recipe = get_recipe_info(recipe_id)
 
 
-            # Updating the ingredients and shopping items of the current recipe in database
-            for item in recipe['extendedIngredients']:
-                ingredient = Ingredient(name=item["original"], recipe_id=new_recipe.id)
-                db.session.add(ingredient)
-                db.session.commit()
-                item = Item(id=item['id'], name=item["name"])
-                db.session.add(item)
-                db.session.commit()
-                recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
-                db.session.add(recipe_item)
-                db.session.commit()
-            
-                
-            return redirect(f'/user/{g.user.id}/collection')
-        
-    
-    except IntegrityError as e:
+    if any(recipe.id == recipe_id for recipe in g.user.recipes):
         flash("Recipe is already in the list", "warning")
         return redirect(f'/recipe/{recipe_id}')
+    
+    
+    # adding the new recipe to data base
+    new_recipe = Recipe(id=recipe_id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
+    db.session.add(new_recipe)
+    db.session.commit()
 
+    # Updating recipes of the current user
+    user_recipe = User_Recipe(user_id=g.user.id, recipe_id=new_recipe.id)
+    db.session.add(user_recipe)
+    db.session.commit()
+
+
+    # Updating the ingredients and shopping items of the current recipe in database
+    for ingredient_data in recipe['extendedIngredients']:
+        ingredient = Ingredient(name=ingredient_data["original"], recipe_id=new_recipe.id)
+        db.session.add(ingredient)
+        db.session.commit()
+        item = Item(id=ingredient_data['id'], name=ingredient_data["name"])
+        db.session.add(item)
+        db.session.commit()
+        recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
+        db.session.add(recipe_item)
+        db.session.commit()
+            
+                
+    return redirect(f'/user/{g.user.id}/collection')
+
+    
+    
 
 @app.route('/user/<int:user_id>/collection')
 def show_collection(user_id):
