@@ -32,14 +32,14 @@
       </ul>
       <ul class="navigation">
         <li><a href="/">Home</a></li>
-
+        <li><a href="/user/{{g.user.id}}">Find Recipe</a></li>
         <li><a href="/user/{{g.user.id}}/collection">Collection</a></li>
         <li><a href="/signout">Sign out</a></li>
       </ul>
     </nav>
     <div>
       <div class="list-container">
-        {% for recipe, items in recipe_items.items() %}
+        {% for recipe, items in recipe_items.items() %} {% if items %}
         <ul>
           <div class="list-card">
             <li class="recipe-name fs-2">{{recipe.title}}:</li>
@@ -59,7 +59,7 @@
             </ul>
           </div>
         </ul>
-        {% endfor %}
+        {% endif %}{% endfor %}
       </div>
     </div>
   </body>

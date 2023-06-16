@@ -280,17 +280,17 @@ def delete_recipe(id):
     return redirect(f'/user/{g.user.id}/collection')
 
 
-# @app.route('/recipe/<int:recipe_id>/delete_items')
-# def remove_shoppinglist(recipe_id):
-#     "Deleting a recipes's shopping list items"
-#     recipe = Recipe.query.get_or_404(recipe_id)
-#     items = recipe.items
+@app.route('/recipe/<int:recipe_id>/delete_items')
+def remove_shoppinglist(recipe_id):
+    "Deleting a recipes's shopping list items"
+    recipe = Recipe.query.get_or_404(recipe_id)
+    items = recipe.items
     
-#     for item in items:
-#         db.session.delete(item)
-#         db.session.commit()
+    for item in items:
+        db.session.delete(item)
+        db.session.commit()
 
-#     return redirect(f'/user/{g.user.id}/collection')
+    return redirect(f'/user/{g.user.id}/collection')
 
 @app.route('/signout')
 def log_out():
