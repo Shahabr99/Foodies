@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
-from models import db, connect_db, User, Recipe, Ingredient, User_Recipe
+from models import db, connect_db, User, Recipe, Ingredient, User_Recipe, Item, Recipe_Item
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 from secret import API_KEY
@@ -125,9 +125,9 @@ def get_data(id):
 
     user = User.query.get_or_404(id)
 
-    if g.user.id != user.id:
-        flash("unauthorized access", "warning")
-        return redirect('/signup')
+    # if g.user.id != user.id:
+    #     flash("unauthorized access", "warning")
+    #     return redirect('/signup')
 
     meal = request.form.get('searchbar')
     meals = get_recipes(meal)
@@ -159,7 +159,7 @@ def get_recipe(id):
 
 @app.route('/recipe/<int:recipe_id>/add')
 def add_recipe(recipe_id):
-    """Adding the saved recipe to database"""
+    """Adding the saved recipe, and its ingredients to database"""
     if not g.user:
         flash("Unauthorized access", "danger")
         return redirect('/')
@@ -181,11 +181,18 @@ def add_recipe(recipe_id):
             db.session.commit()
 
 
-            # Updating the ingredients of the current recipe
+            # Updating the ingredients and shopping items of the current recipe in database
             for name in recipe['extendedIngredients']:
                 ingredient = Ingredient(name=name["original"], recipe_id=new_recipe.id)
+                item = Item(id=name['id'], name=name["name"])
                 db.session.add(ingredient)
                 db.session.commit()
+                db.session.add(item)
+                db.session.commit()
+                recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
+                db.session.add(recipe_item)
+                db.session.commit()
+            
                 
             return redirect(f'/user/{g.user.id}/collection')
         
@@ -211,8 +218,19 @@ def show_collection(user_id):
     return render_template('collection.html', recipes=recipes)
 
 
-@app.route('/user/<int:user_id>/shoppinglist')
-def show_list(user_id):
+@app.route('/user/<int:id>/shoppinglist')
+def load_shopping_list(id):
+    """Shows shopping list of the user"""
+    user = User.query.get_or_404(id)
+    recipes = user.recipes
+    for recipe in recipes:
+        items = recipe.items
+    
+    return render_template('shoppinglist.html', recipe=recipe, items=items)
+
+
+@app.route('/user/<int:user_id>/recipe/<int:recipe_id>/shoppinglist')
+def show_list(user_id, recipe_id):
     """Creates a list of items to but for a recipe"""
     if not g.user:
         flash("unauthorized access", "danger")
@@ -222,20 +240,36 @@ def show_list(user_id):
         flash("unauthorized accesss", "danger")
         return redirect("/signin")
 
-    recipes = g.user.recipes;
-
-    return render_template('shoppinglist.html', recipes=recipes)
-
+    recipe = Recipe.query.get_or_404(recipe_id);
+    items = recipe.items
+    
+    return render_template('shoppinglist.html',recipe=recipe, items=items)
 
 
 @app.route('/recipe/<int:id>/delete')
 def delete_recipe(id):
-    """Deleting a recipe from database"""
+    """Deleting a recipe with its ingredients from database"""
     target_recipe = Recipe.query.filter_by(id=id).first()
+    target_ingredients = target_recipe.ingredients
+    for ingredient in target_ingredients:
+        db.session.delete(ingredient)
+        db.session.commit()
     db.session.delete(target_recipe)
     db.session.commit()
+    
     return redirect(f'/user/{g.user.id}/collection')
 
+
+@app.route('/recipe/<int:recipe_id>/delete_items')
+def remove_shoppinglist(recipe_id):
+    "Deleting a recipes's shopping list items"
+    recipe = Recipe.query.get_or_404(recipe_id)
+    items = Recipe.items
+    
+    for item in items:
+        db.session.delete(item)
+        db.session.commit()
+        return redirect(f'/user/{g.user.id}/collection')
 
 @app.route('/signout')
 def log_out():

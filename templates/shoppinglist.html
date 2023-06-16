@@ -32,35 +32,32 @@
       </ul>
       <ul class="navigation">
         <li><a href="/">Home</a></li>
-        <li><a href="/user/{{g.user.id}}/shoppinglist">Shopping List</a></li>
+
         <li><a href="/user/{{g.user.id}}/collection">Collection</a></li>
         <li><a href="/signout">Sign out</a></li>
       </ul>
     </nav>
     <div>
-      <div></div>
       <div class="list-container">
-        {% for recipe in recipes %}
         <ul>
           <div class="list-card">
             <li class="recipe-name fs-2">{{recipe.title}}:</li>
-            <a href=""
+            <a href="/recipe/{{recipe.id}}/delete_items"
               ><i
                 class="cls-btn fa-sharp fa-solid fa-rectangle-xmark fa-2xl"
                 style="color: #ff0000"
               ></i
             ></a>
             <ul class="item-list-card">
-              {% for ingredient in recipe.ingredients %}
+              {% for item in items %}
               <li class="shopping-list fs-4">
                 <input type="checkbox" name="tobuy" class="check" />
-                {{ingredient.name}}
+                {{item.name}}
               </li>
               {% endfor %}
             </ul>
           </div>
         </ul>
-        {% endfor %}
       </div>
     </div>
   </body>

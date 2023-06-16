@@ -48,10 +48,9 @@ class Recipe(db.Model):
     image=db.Column(db.Text, nullable=True)
     summary=db.Column(db.Text, nullable=True)
     instructions = db.Column(db.Text, nullable=True)
-    # ingredients = db.Column(db.Text, nullable=True)
 
     ingredients = db.relationship("Ingredient", backref="recipe")
-    items = db.relationship("Item", backref="recipe")
+    items = db.relationship("Item", secondary="recipes_items")
 
     
 class User_Recipe(db.Model):
@@ -69,7 +68,7 @@ class Ingredient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable= False)
-    recipe_id= db.Column(db.Integer, db.ForeignKey("recipes.id"))
+    recipe_id= db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="cascade"))
     
 
 class Item(db.Model):
@@ -78,14 +77,16 @@ class Item(db.Model):
 
     id=db.Column(db.Integer, primary_key=True)
     name= db.Column(db.Text, nullable=False, unique=True)
+    # recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete="cascade"))
 
+    recipe = db.relationship("Recipe", secondary="recipes_items")
 
 class Recipe_Item(db.Model):
 
     __tablename__= "recipes_items"
 
     id= db.Column(db.Integer, primary_key=True, autoincrement=True)
-    recipe_id = db.Column(db.Integer, db.ForeinKey("recipes.id", ondelete="cascade"), primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="cascade"), primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id", ondelete="cascade"), primary_key=True)
 
 

@@ -5,17 +5,14 @@ const checkboxs = document.querySelectorAll(".check");
 const shoppingItemArr = Array.from(shoppingItem);
 const checkboxsArr = Array.from(checkboxs);
 
-let click = 0;
-
 // Getting all the checkboxes and adding a line through to the bought items
 for (let checkbox of checkboxs) {
   checkbox.addEventListener("click", function (e) {
-    if (e.target.className === "check") {
-      e.target.parentElement.classList.add("clicked");
-      click += 1;
-    }
-    if (click % 2 === 0) {
+    if (e.target.parentElement.className.includes("clicked")) {
+      console.log("clicked");
       e.target.parentElement.classList.remove("clicked");
+    } else {
+      e.target.parentElement.classList.add("clicked");
     }
   });
 }
@@ -23,7 +20,7 @@ for (let checkbox of checkboxs) {
 for (let closeBtn of closeBtns) {
   closeBtn.addEventListener("click", function (e) {
     if (e.target.className.includes("cls-btn")) {
-      e.preventDefault();
+      // e.preventDefault();
       e.target.closest("div").style.display = "none";
     }
   });
