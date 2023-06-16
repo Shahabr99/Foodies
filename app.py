@@ -194,11 +194,11 @@ def add_recipe(recipe_id):
 
 
             # Updating the ingredients and shopping items of the current recipe in database
-            for name in recipe['extendedIngredients']:
-                ingredient = Ingredient(name=name["original"], recipe_id=new_recipe.id)
-                item = Item(id=name['id'], name=name["name"])
+            for item in recipe['extendedIngredients']:
+                ingredient = Ingredient(name=item["original"], recipe_id=new_recipe.id)
                 db.session.add(ingredient)
                 db.session.commit()
+                item = Item(id=item['id'], name=item["name"])
                 db.session.add(item)
                 db.session.commit()
                 recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
@@ -232,7 +232,7 @@ def show_collection(user_id):
 
 @app.route('/user/<int:id>/shoppinglist')
 def load_shopping_list(id):
-    """Shows shopping list of the user"""
+    """adding shopping list for each recipe"""
     user = User.query.get_or_404(id)
     recipes = user.recipes
 
