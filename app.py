@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
+from requests.exceptions import RequestException
 from models import db, connect_db, User, Recipe, Ingredient, User_Recipe, Item, Recipe_Item
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
@@ -20,18 +21,24 @@ with app.app_context():
 
 def get_recipes(meal):
     """Getting all the related recipes from the endpoint"""
-    
-    res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
-    data = res.json()
-    return data
-    
+    try:
+        res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
+        data = res.json()
+        return data
+    except(RequestException, ValueError) as e:
+        flash("Error occurred while retrieving recipes", "danger")
+        return None
 
 
 def get_recipe_info(id):
     """Gets ingredients, instructions and some information about the recipe"""
-    res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={API_KEY}")
-    data = res.json()
-    return data
+    try:
+        res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={API_KEY}")
+        data = res.json()
+        return data
+    except(RequestException, ValueError) as e:
+        flash("Error occurred while retrieving recipes", "danger")
+        return None
 
 
 @app.before_request
@@ -71,6 +78,8 @@ def signup_form():
         name = form.name.data
         username = form.username.data
         password= form.password.data
+        
+        
         try:
             user = User.registration(name, username, password)
             db.session.commit()
@@ -130,12 +139,15 @@ def get_data(id):
     #     return redirect('/signup')
 
     meal = request.form.get('searchbar')
+    if not meal:
+        flash("please enter a valid search query", "warning")
+        return redirect(f'/user/{id}')
     meals = get_recipes(meal)
     if meals:
         return render_template('meals.html', meals=meals)
     else:
-        flash("Invalid data", "warning")
-        return redirect(f'/user/{user.id}')
+        flash("No meals found!", "warning")
+        return redirect(f'/user/{id}')
 
 
 @app.route('/recipe/<int:id>')
@@ -223,27 +235,31 @@ def load_shopping_list(id):
     """Shows shopping list of the user"""
     user = User.query.get_or_404(id)
     recipes = user.recipes
+
+    recipe_items={}
+
     for recipe in recipes:
-        items = recipe.items
+        items = [item.name for item in recipe.items]
+        recipe_items[recipe] = items
     
-    return render_template('shoppinglist.html', recipe=recipe, items=items)
+    return render_template('shoppinglist.html', recipe_items=recipe_items)
 
 
-@app.route('/user/<int:user_id>/recipe/<int:recipe_id>/shoppinglist')
-def show_list(user_id, recipe_id):
-    """Creates a list of items to but for a recipe"""
-    if not g.user:
-        flash("unauthorized access", "danger")
-        return redirect('/')
+# @app.route('/user/<int:user_id>/recipe/<int:recipe_id>/shoppinglist')
+# def show_list(user_id, recipe_id):
+#     """Creates a list of items to but for a recipe"""
+#     if not g.user:
+#         flash("unauthorized access", "danger")
+#         return redirect('/')
 
-    if g.user.id != user_id:
-        flash("unauthorized accesss", "danger")
-        return redirect("/signin")
+#     if g.user.id != user_id:
+#         flash("unauthorized accesss", "danger")
+#         return redirect("/signin")
 
-    recipe = Recipe.query.get_or_404(recipe_id);
-    items = recipe.items
+#     recipe = Recipe.query.get_or_404(recipe_id);
+#     items = recipe.items
     
-    return render_template('shoppinglist.html',recipe=recipe, items=items)
+#     return render_template('shoppinglist.html',recipe=recipe, items=items)
 
 
 @app.route('/recipe/<int:id>/delete')
@@ -251,8 +267,12 @@ def delete_recipe(id):
     """Deleting a recipe with its ingredients from database"""
     target_recipe = Recipe.query.filter_by(id=id).first()
     target_ingredients = target_recipe.ingredients
+    target_items = target_recipe.items
     for ingredient in target_ingredients:
         db.session.delete(ingredient)
+        db.session.commit()
+    for item in target_items:
+        db.session.delete(item)
         db.session.commit()
     db.session.delete(target_recipe)
     db.session.commit()
@@ -260,16 +280,17 @@ def delete_recipe(id):
     return redirect(f'/user/{g.user.id}/collection')
 
 
-@app.route('/recipe/<int:recipe_id>/delete_items')
-def remove_shoppinglist(recipe_id):
-    "Deleting a recipes's shopping list items"
-    recipe = Recipe.query.get_or_404(recipe_id)
-    items = Recipe.items
+# @app.route('/recipe/<int:recipe_id>/delete_items')
+# def remove_shoppinglist(recipe_id):
+#     "Deleting a recipes's shopping list items"
+#     recipe = Recipe.query.get_or_404(recipe_id)
+#     items = recipe.items
     
-    for item in items:
-        db.session.delete(item)
-        db.session.commit()
-        return redirect(f'/user/{g.user.id}/collection')
+#     for item in items:
+#         db.session.delete(item)
+#         db.session.commit()
+
+#     return redirect(f'/user/{g.user.id}/collection')
 
 @app.route('/signout')
 def log_out():
