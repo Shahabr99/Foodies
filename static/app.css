@@ -358,7 +358,7 @@ ul li a:active {
   border: 1px solid;
   border-radius: 1.2rem;
   width: 95%;
-  height: 90%;
+  /* height: 90%; */
   margin: 1.2rem auto;
   overflow: hidden;
 }
@@ -375,7 +375,7 @@ ul li a:active {
 }
 
 .title {
-  letter-spacing: 1rem;
+  letter-spacing: 0.6rem;
   font-weight: 600;
 }
 
@@ -490,6 +490,17 @@ ul li a:active {
   box-shadow: 2px 2px 2px #000;
   border: 1px solid;
   background-color: #b8651c;
+  position: relative;
+}
+
+.cls-btn {
+  position: absolute;
+  top: 8%;
+  left: 92%;
+}
+
+.cls-btn:hover {
+  cursor: pointer;
 }
 
 .recipe-name {

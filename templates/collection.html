@@ -14,7 +14,7 @@ endblock %} {% block content %}
   <ul class="navigation">
     <li><a href="/">Home</a></li>
     <li><a href="/user/{{g.user.id}}">Find Recipe</a></li>
-    <li><a href="/shoppinglist">Shopping List</a></li>
+    <li><a href="/user/{{g.user.id}}/shoppinglist">Shopping List</a></li>
     <li><a href="/signout">Sign out</a></li>
   </ul>
 </nav>
@@ -25,7 +25,7 @@ endblock %} {% block content %}
   <div class="stored-illustration"></div>
   <div class="saved-recipes">
     {% for recipe in recipes %}
-    <div class="card recipe_card" style="width: 20rem; height: 25rem">
+    <div class="card recipe_card" style="width: 25rem; height: 26rem">
       <img src="{{recipe.image}}" class="card-img-top" alt="..." />
       <div class="card-container card-body">
         <h5 class="card-title">{{recipe.title}}</h5>
@@ -37,6 +37,11 @@ endblock %} {% block content %}
             href="/recipe/{{recipe.id}}/delete"
             class="btn btn-danger text-light px-3"
             >Delete</a
+          >
+          <a
+            href="/user/{{g.user.id}}/shoppinglist"
+            class="btn btn-success text-light"
+            >Create Shopping list</a
           >
         </div>
       </div>

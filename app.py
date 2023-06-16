@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, session,  g, abort, flash, request
 import requests
-from models import db, connect_db, User, Recipe, Ingredient, Recipe_Ingredient, User_Recipe
+from models import db, connect_db, User, Recipe, Ingredient, User_Recipe
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
 from secret import API_KEY
@@ -110,14 +110,25 @@ def user_page(id):
     if CURR_USER_KEY not in session:
         return redirect('/signup')
 
+    if g.user.id != id:
+        flash("unauthorized access", "danger")
+        return redirect("/signup")
+    
     user = User.query.get_or_404(id)
     return render_template('user.html', user=user)
 
 
+
 @app.route('/user/<int:id>', methods=["POST"])
 def get_data(id):
-    """Getting meal data from API"""
+    """Getting recipes data from API"""
+
     user = User.query.get_or_404(id)
+
+    if g.user.id != user.id:
+        flash("unauthorized access", "warning")
+        return redirect('/signup')
+
     meal = request.form.get('searchbar')
     meals = get_recipes(meal)
     if meals:
@@ -126,20 +137,27 @@ def get_data(id):
         flash("Invalid data", "warning")
         return redirect(f'/user/{user.id}')
 
+
 @app.route('/recipe/<int:id>')
 def get_recipe(id):
+    """Gets all the info about a recipe"""
     if not g.user:
         flash("Unauthorized access", "danger")
         return redirect('/')
-
+    
     recipe = get_recipe_info(id)
+
+    if not recipe:
+        flash("Recipe not found", "danger")
+        return redirect
+
     user = g.user
     recipe_id = id
        
     return render_template('recipe.html', recipe=recipe, user=user, recipe_id=id)
 
 
-@app.route('/recipe/<int:recipe_id>/collection')
+@app.route('/recipe/<int:recipe_id>/add')
 def add_recipe(recipe_id):
     """Adding the saved recipe to database"""
     if not g.user:
@@ -165,15 +183,11 @@ def add_recipe(recipe_id):
 
             # Updating the ingredients of the current recipe
             for name in recipe['extendedIngredients']:
-                ingredient = Ingredient(name=name["original"])
+                ingredient = Ingredient(name=name["original"], recipe_id=new_recipe.id)
                 db.session.add(ingredient)
                 db.session.commit()
-                recipe_ingredient = Recipe_Ingredient(recipe_id=new_recipe.id, ingredient_id=ingredient.id)
-                db.session.add(recipe_ingredient)
-                db.session.commit()
-        
-            # ingredients = Ingredient.query.join(Recipe_Ingredient).filter(Recipe_Ingredient.recipe_id == new_recipe.id).all()
-            return redirect('/collection')
+                
+            return redirect(f'/user/{g.user.id}/collection')
         
     
     except IntegrityError as e:
@@ -181,20 +195,33 @@ def add_recipe(recipe_id):
         return redirect(f'/recipe/{recipe_id}')
 
 
-@app.route('/collection')
-def show_collection():
+@app.route('/user/<int:user_id>/collection')
+def show_collection(user_id):
+    """Gets all the recipes of the current user and shows them"""
     if not g.user:
         flash("unauthorized access", "danger")
         return redirect('/')
+
+    if g.user.id != user_id:
+        flash("unauthorized accesss", "danger")
+        return redirect("/signin")
 
     recipes = g.user.recipes
     
     return render_template('collection.html', recipes=recipes)
 
 
-@app.route('/shoppinglist')
-def show_list():
+@app.route('/user/<int:user_id>/shoppinglist')
+def show_list(user_id):
     """Creates a list of items to but for a recipe"""
+    if not g.user:
+        flash("unauthorized access", "danger")
+        return redirect('/')
+
+    if g.user.id != user_id:
+        flash("unauthorized accesss", "danger")
+        return redirect("/signin")
+
     recipes = g.user.recipes;
 
     return render_template('shoppinglist.html', recipes=recipes)
@@ -207,7 +234,7 @@ def delete_recipe(id):
     target_recipe = Recipe.query.filter_by(id=id).first()
     db.session.delete(target_recipe)
     db.session.commit()
-    return redirect('/collection')
+    return redirect(f'/user/{g.user.id}/collection')
 
 
 @app.route('/signout')

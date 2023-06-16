@@ -12,9 +12,9 @@ block content %}
     </li>
   </ul>
   <ul class="navigation">
-    <li><a href="/">Home</a></li>
-    <li><a href="/shoppinglist">Shopping List</a></li>
-    <li><a href="/collection">Collection</a></li>
+    <li><a href="/user/{{g.user.id}}">Find recipe</a></li>
+    <li><a href="/user/{{g.user.id}}/shoppinglist">Shopping List</a></li>
+    <li><a href="/user/{{g.user.id}}/collection">Collection</a></li>
     <li><a href="/signout">Sign out</a></li>
   </ul>
 </nav>
@@ -33,14 +33,9 @@ block content %}
     <h2 class="title">{{recipe['title'] | upper }}</h2>
     <div class="btn-box">
       <a
-        href="/recipe/{{recipe_id}}/collection"
+        href="/recipe/{{recipe_id}}/add"
         class="btn btn-lg btn-primary text-light text-center"
         >Add to collection</a
-      >
-      <a
-        href="/shoppinglist"
-        class="btn btn-lg btn-success text-light text-center"
-        >Create Shopping list</a
       >
     </div>
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>{{g.user.username}} Shopping list</title>
     <link rel="stylesheet" href="/static/app.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -11,6 +11,11 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <script
+      src="https://kit.fontawesome.com/c04c28872c.js"
+      crossorigin="anonymous"
+    ></script>
+
     <script defer src="/static/app.js"></script>
   </head>
   <body>
@@ -27,8 +32,8 @@
       </ul>
       <ul class="navigation">
         <li><a href="/">Home</a></li>
-        <li><a href="/shoppinglist">Shopping List</a></li>
-        <li><a href="/collection">Collection</a></li>
+        <li><a href="/user/{{g.user.id}}/shoppinglist">Shopping List</a></li>
+        <li><a href="/user/{{g.user.id}}/collection">Collection</a></li>
         <li><a href="/signout">Sign out</a></li>
       </ul>
     </nav>
@@ -39,7 +44,13 @@
         <ul>
           <div class="list-card">
             <li class="recipe-name fs-2">{{recipe.title}}:</li>
-            <ul>
+            <a href=""
+              ><i
+                class="cls-btn fa-sharp fa-solid fa-rectangle-xmark fa-2xl"
+                style="color: #ff0000"
+              ></i
+            ></a>
+            <ul class="item-list-card">
               {% for ingredient in recipe.ingredients %}
               <li class="shopping-list fs-4">
                 <input type="checkbox" name="tobuy" class="check" />

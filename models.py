@@ -50,11 +50,10 @@ class Recipe(db.Model):
     instructions = db.Column(db.Text, nullable=True)
     # ingredients = db.Column(db.Text, nullable=True)
 
-    ingredients = db.relationship("Ingredient", secondary="recipes_ingredients")
+    ingredients = db.relationship("Ingredient", backref="recipe")
+    items = db.relationship("Item", backref="recipe")
 
     
-
-
 class User_Recipe(db.Model):
 
     __tablename__ = "users_recipes"
@@ -70,15 +69,25 @@ class Ingredient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.Text, nullable= False)
+    recipe_id= db.Column(db.Integer, db.ForeignKey("recipes.id"))
     
 
-class Recipe_Ingredient(db.Model):
+class Item(db.Model):
 
-    __tablename__ = "recipes_ingredients"
+    __tablename__ = "items"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="cascade"), primary_key=True)
-    ingredient_id=db.Column(db.Integer, db.ForeignKey("ingredients.id", ondelete="cascade"), primary_key=True)
+    id=db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.Text, nullable=False, unique=True)
+
+
+class Recipe_Item(db.Model):
+
+    __tablename__= "recipes_items"
+
+    id= db.Column(db.Integer, primary_key=True, autoincrement=True)
+    recipe_id = db.Column(db.Integer, db.ForeinKey("recipes.id", ondelete="cascade"), primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey("items.id", ondelete="cascade"), primary_key=True)
+
 
 
 def connect_db(app):
