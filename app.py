@@ -185,7 +185,7 @@ def add_recipe(recipe_id):
         return redirect(f'/recipe/{recipe_id}')
     
     
-    # adding the new recipe to data base
+    # adding the new recipe to the database
     new_recipe = Recipe(id=recipe_id, image=recipe['image'], title=recipe['title'], summary=recipe['summary'], instructions=recipe['instructions'])
     db.session.add(new_recipe)
     db.session.commit()
@@ -199,14 +199,20 @@ def add_recipe(recipe_id):
     # Updating the ingredients and shopping items of the current recipe in database
     for ingredient_data in recipe['extendedIngredients']:
         ingredient = Ingredient(name=ingredient_data["original"], recipe_id=new_recipe.id)
-        db.session.add(ingredient)
-        db.session.commit()
-        item = Item(id=ingredient_data['id'], name=ingredient_data["name"])
+        item = Item( name=ingredient_data["name"])
         db.session.add(item)
-        db.session.commit()
+        db.session.flush()
+
+
         recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
         db.session.add(recipe_item)
-        db.session.commit()
+        # db.session.add(ingredient)
+        
+        new_recipe.ingredients.append(ingredient)
+        
+
+    db.session.add(new_recipe)
+    db.session.commit()
             
                 
     return redirect(f'/user/{g.user.id}/collection')
@@ -243,23 +249,6 @@ def load_shopping_list(id):
         recipe_items[recipe] = items
     
     return render_template('shoppinglist.html', recipe_items=recipe_items)
-
-
-# @app.route('/user/<int:user_id>/recipe/<int:recipe_id>/shoppinglist')
-# def show_list(user_id, recipe_id):
-#     """Creates a list of items to but for a recipe"""
-#     if not g.user:
-#         flash("unauthorized access", "danger")
-#         return redirect('/')
-
-#     if g.user.id != user_id:
-#         flash("unauthorized accesss", "danger")
-#         return redirect("/signin")
-
-#     recipe = Recipe.query.get_or_404(recipe_id);
-#     items = recipe.items
-    
-#     return render_template('shoppinglist.html',recipe=recipe, items=items)
 
 
 @app.route('/recipe/<int:id>/delete')

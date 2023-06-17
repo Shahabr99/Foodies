@@ -75,8 +75,8 @@ class Item(db.Model):
 
     __tablename__ = "items"
 
-    id=db.Column(db.Integer, primary_key=True)
-    name= db.Column(db.Text, nullable=False, unique=True)
+    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name= db.Column(db.Text)
     # recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete="cascade"))
 
     recipe = db.relationship("Recipe", secondary="recipes_items")
@@ -85,7 +85,6 @@ class Recipe_Item(db.Model):
 
     __tablename__= "recipes_items"
 
-    id= db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipes.id", ondelete="cascade"), primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey("items.id", ondelete="cascade"), primary_key=True)
 
