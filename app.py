@@ -4,13 +4,16 @@ from requests.exceptions import RequestException
 from models import db, connect_db, User, Recipe, Ingredient, User_Recipe, Item, Recipe_Item
 from forms import Signup, Signin
 from sqlalchemy.exc import IntegrityError
-from secret import API_KEY
+import os
+# from secret import API_KEY
+
+API_KEY = "0f36c38af1954fb1a503b5ca4f5a0e47"
 
 CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = "oh-so-secret"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///foodies'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_UTL', 'postgresql://ylzqlhqt:UdGtftQ6gHbZ9EKMXgFgMg2p8ic9M5UB@mahmud.db.elephantsql.com/ylzqlhqt')
 app.config['SQLALCHEMY_ECHO'] = False
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
