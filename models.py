@@ -50,7 +50,7 @@ class Recipe(db.Model):
     instructions = db.Column(db.Text, nullable=True)
 
     ingredients = db.relationship("Ingredient", backref="recipe")
-    items = db.relationship("Item", secondary="recipes_items")
+    items = db.relationship("Item", secondary="recipes_items", back_populates="recipes")
 
     
 class User_Recipe(db.Model):
@@ -79,7 +79,7 @@ class Item(db.Model):
     name= db.Column(db.Text)
     # recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id', ondelete="cascade"))
 
-    recipe = db.relationship("Recipe", secondary="recipes_items")
+    recipes = db.relationship("Recipe", secondary="recipes_items", back_populates="items")
 
 class Recipe_Item(db.Model):
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session,  g, abort, flash, request
+from flask import Flask, render_template, redirect, session,  g, flash, request
 import requests
 from requests.exceptions import RequestException
 from models import db, connect_db, User, Recipe, Ingredient, User_Recipe, Item, Recipe_Item
@@ -26,6 +26,7 @@ def get_recipes(meal):
     """Getting all the related recipes from the endpoint"""
     try:
         res = requests.get(f"https://api.spoonacular.com/recipes/complexSearch?apiKey={API_KEY}&query={meal}")
+        # parsing json to python dict
         data = res.json()
         return data
     except(RequestException, ValueError) as e:
@@ -37,6 +38,7 @@ def get_recipe_info(id):
     """Gets ingredients, instructions and some information about the recipe"""
     try:
         res = requests.get(f"https://api.spoonacular.com/recipes/{id}/information?apiKey={API_KEY}")
+        # Parsing json to python dict
         data = res.json()
         return data
     except(RequestException, ValueError) as e:
@@ -204,7 +206,7 @@ def add_recipe(recipe_id):
         ingredient = Ingredient(name=ingredient_data["original"], recipe_id=new_recipe.id)
         item = Item( name=ingredient_data["name"])
         db.session.add(item)
-        db.session.flush()
+        db.session.commit()
 
 
         recipe_item = Recipe_Item(recipe_id = new_recipe.id, item_id=item.id )
